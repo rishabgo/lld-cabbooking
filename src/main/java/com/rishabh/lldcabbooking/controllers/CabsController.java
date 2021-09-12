@@ -5,13 +5,14 @@ import com.rishabh.lldcabbooking.database.RidersManager;
 import com.rishabh.lldcabbooking.database.TripsManager;
 import com.rishabh.lldcabbooking.model.Cab;
 import com.rishabh.lldcabbooking.model.Location;
+import com.sun.istack.internal.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("api/v1/rest")
+@RequestMapping("/api/v1/rest")
 public class CabsController {
 
     private CabsManager cabsManager;
@@ -25,20 +26,20 @@ public class CabsController {
     @PostMapping("/register/cab")
    public ResponseEntity<Cab> registerCab(@RequestBody Cab cab){
 
-      cabsManager.createCab(cab);
-      return new ResponseEntity(cab,HttpStatus.CREATED);
+      Cab registeredCab = cabsManager.createCab(cab);
+      return new ResponseEntity(registeredCab,HttpStatus.CREATED);
    }
 
-   @PostMapping("/update/cab/location")
-   public ResponseEntity updateCabLocation(final String cabId,final Double newX,final Double newY){
-        cabsManager.updateCabLocation(cabId,new Location(newX,newY));
-        return ResponseEntity.ok("");
+   @PostMapping("/update/cab/location/cabId/{cabId}")
+   public ResponseEntity<Cab> updateCabLocation(@PathVariable("cabId") final String cabId,@RequestBody Location location){
+         Cab cab = cabsManager.updateCabLocation(cabId,location);
+        return ResponseEntity.ok(cab);
    }
 
    @PostMapping("/update/cab/availability")
-   public ResponseEntity updateCabAvailability(final String cabId,final boolean newAvailability){
-       cabsManager.updateCabAvailability(cabId,newAvailability);
-       return ResponseEntity.ok("");
+   public ResponseEntity<Cab> updateCabAvailability(@RequestBody @NotNull Cab updatedCab){
+       Cab cab = cabsManager.updateCabAvailability(updatedCab.getId(),updatedCab.getIsAvailable());
+       return ResponseEntity.ok(cab);
    }
 
    @PostMapping("/update/cab/end/trip")

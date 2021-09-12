@@ -32,13 +32,5 @@ public class RunnerTest {
     }
 
 
-    @Test
-    public void testCabBookingFlow(){
-
-
-
-
-    }
-
 
 }

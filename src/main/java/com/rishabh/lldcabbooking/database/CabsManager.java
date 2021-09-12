@@ -14,18 +14,19 @@ import java.util.Map;
 
 @Repository
 public class CabsManager {
-    private Map<String,Cab> cabs = new HashMap();
+    private static Map<String,Cab> cabs = new HashMap();
 
-    public void createCab(@NonNull final Cab cab) {
+    public Cab createCab(@NonNull final Cab cab) {
       if(cabs.containsKey(cab.getId())){
-          throw new CabAlreadyExistsException();
+          throw new CabAlreadyExistsException("Cab with ID:" + cab.getId() +" already exist");
       }
      cabs.put(cab.getId(),cab);
+      return cab;
     }
 
     public Cab getCab(@NonNull final String cabId){
         if(!cabs.containsKey(cabId)){
-            throw new CabNotFoundException();
+            throw new CabNotFoundException("No cab found");
         }
         return cabs.get(cabId);
     }
@@ -41,17 +42,21 @@ public class CabsManager {
         return availableCabs;
     }
 
-    public void updateCabLocation(@NonNull final String cabId,@NonNull Location newLocation) {
+    public Cab updateCabLocation(@NonNull final String cabId,@NonNull Location newLocation) {
         if(!cabs.containsKey(cabId)){
-            throw new CabNotFoundException();
+            throw new CabNotFoundException("No cab found");
         }
-        cabs.get(cabId).setCurrentLocation(newLocation);
+        Cab cab = cabs.get(cabId);
+        cab.setCurrentLocation(newLocation);
+        return cab;
     }
 
-    public void updateCabAvailability(@NonNull final String cabId,@NonNull final boolean newAvailability) {
+    public Cab updateCabAvailability(@NonNull final String cabId,@NonNull final boolean newAvailability) {
         if(!cabs.containsKey(cabId)){
-            throw new CabNotFoundException();
+            throw new CabNotFoundException("No cab found");
         }
-        cabs.get(cabId).setIsAvailable(newAvailability);
+        Cab cab = cabs.get(cabId);
+        cab.setIsAvailable(newAvailability);
+        return cab;
     }
 }
